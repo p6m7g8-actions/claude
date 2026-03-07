@@ -1,0 +1,21 @@
+name: Claude Code Review
+description: Run Claude Code review on a pull request via anthropics/claude-code-action
+
+inputs:
+  anthropic_api_key:
+    description: "Anthropic API key"
+    required: true
+  direct_prompt:
+    description: "Prompt to send to Claude"
+    required: false
+    default: "Review this pull request for code quality, bugs, and best practices. Be concise."
+
+runs:
+  using: composite
+  steps:
+    - uses: p6m7g8-actions/checkout@main
+
+    - uses: anthropics/claude-code-action@beta
+      with:
+        anthropic_api_key: ${{ inputs.anthropic_api_key }}
+        direct_prompt: ${{ inputs.direct_prompt }}
