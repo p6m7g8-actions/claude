@@ -9,6 +9,20 @@ inputs:
     description: "Prompt to send to Claude"
     required: false
     default: "Review this pull request for code quality, bugs, and best practices. Be concise."
+  track_progress:
+    description: >-
+      Force tag mode with tracking comments on pull_request events. This is the
+      mechanism that gives Claude a comment to publish the review into. Set to
+      "false" to opt out and handle publication yourself.
+    required: false
+    default: "true"
+  use_sticky_comment:
+    description: >-
+      Deliver the review in a single comment that is updated in place across
+      pushes, rather than accumulating one comment per run. Set to "false" for
+      one comment per run.
+    required: false
+    default: "true"
 
 runs:
   using: composite
@@ -20,7 +34,20 @@ runs:
     # `direct_prompt` had already been renamed to `prompt`, so the review
     # prompt was being discarded as an unknown input and every review ran on
     # upstream defaults.
+    #
+    # `track_progress` and `use_sticky_comment` both default to "false"
+    # upstream. With neither set, the action ran the review to completion and
+    # then discarded it: no tracking comment existed to write into and the
+    # prompt does not itself instruct publication. The result was a green
+    # check that produced no artifact. Defaulting both to "true" here makes
+    # the review land as one comment that is updated in place.
+    #
+    # `display_report` is deliberately left at its upstream default of
+    # "false": it writes Claude-authored content into the GitHub Step Summary
+    # and upstream restricts it to trusted input only.
     - uses: anthropics/claude-code-action@v1.0.183
       with:
         anthropic_api_key: ${{ inputs.anthropic_api_key }}
         prompt: ${{ inputs.prompt }}
+        track_progress: ${{ inputs.track_progress }}
+        use_sticky_comment: ${{ inputs.use_sticky_comment }}
