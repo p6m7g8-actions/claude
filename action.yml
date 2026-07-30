@@ -5,7 +5,7 @@ inputs:
   anthropic_api_key:
     description: "Anthropic API key"
     required: true
-  direct_prompt:
+  prompt:
     description: "Prompt to send to Claude"
     required: false
     default: "Review this pull request for code quality, bugs, and best practices. Be concise."
@@ -15,7 +15,12 @@ runs:
   steps:
     - uses: p6m7g8-actions/checkout@main
 
-    - uses: anthropics/claude-code-action@beta
+    # Pinned to an exact upstream release per the fleet policy: third-party
+    # actions take a v-tag pin, never a moving ref. This was `@beta`, where
+    # `direct_prompt` had already been renamed to `prompt`, so the review
+    # prompt was being discarded as an unknown input and every review ran on
+    # upstream defaults.
+    - uses: anthropics/claude-code-action@v1.0.183
       with:
         anthropic_api_key: ${{ inputs.anthropic_api_key }}
-        direct_prompt: ${{ inputs.direct_prompt }}
+        prompt: ${{ inputs.prompt }}
