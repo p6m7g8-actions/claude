@@ -6,9 +6,37 @@ inputs:
     description: "Anthropic API key"
     required: true
   prompt:
-    description: "Prompt to send to Claude"
+    description: >-
+      Prompt to send to Claude. An override replaces the default wholesale, so
+      any override that still needs to be machine-readable must carry the
+      verdict contract instruction forward itself.
     required: false
-    default: "Review this pull request for code quality, bugs, and best practices. Be concise."
+    default: |
+      Review this pull request for code quality, bugs, and best practices. Be concise.
+
+      End every review with exactly these three lines, in this order, as the
+      final three lines of your comment, with no text, blank line, or markup
+      after them:
+
+      Review-Lane: code
+      Overall: patch is correct
+      Findings (total): 0
+
+      Rules for those three lines:
+      - Emit all three verbatim on every review, including when you found
+        nothing at all. They are never omitted, reordered, or reworded.
+      - `Review-Lane: code` is a fixed literal. Copy it exactly.
+      - Write `Overall: patch is incorrect` in place of
+        `Overall: patch is correct` when at least one finding you reported is
+        merge-blocking. Otherwise write `Overall: patch is correct`.
+      - Replace the `0` in `Findings (total): 0` with the number of findings
+        you reported. Emit the line even when that number is 0.
+      - They go last, not first. A tracking header is prepended to your
+        comment, so the start of the comment is not yours to control; the end
+        is.
+      - A downstream tool matches these strings literally. Do not wrap them in
+        bold, a code fence, a list marker, or a table, and do not add
+        punctuation.
   track_progress:
     description: >-
       Force tag mode with tracking comments on pull_request events. This is the
