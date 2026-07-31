@@ -8,7 +8,7 @@ third-party pinning policy.
 ## Usage
 
 ```yaml
-- uses: p6m7g8-actions/claude@main
+- uses: p6m7g8-actions/p6-code-review@main
   with:
     anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
 ```
@@ -16,7 +16,7 @@ third-party pinning policy.
 ### Overriding the review prompt
 
 ```yaml
-- uses: p6m7g8-actions/claude@main
+- uses: p6m7g8-actions/p6-code-review@main
   with:
     anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
     prompt: "Review only for security defects. Be concise."
@@ -80,7 +80,7 @@ Both remain configurable, so a consumer that wants upstream behavior can opt
 out:
 
 ```yaml
-- uses: p6m7g8-actions/claude@main
+- uses: p6m7g8-actions/p6-code-review@main
   with:
     anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
     track_progress: "false"
