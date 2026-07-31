@@ -55,7 +55,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: p6m7g8-actions/checkout@main
+    - uses: p6m7g8-actions/gh-repo-checkout@main
 
     # Pinned to an exact upstream release per the fleet policy: third-party
     # actions take a v-tag pin, never a moving ref. This was `@beta`, where
